@@ -1,0 +1,13 @@
+{
+  "name": "SubscriberConfiguration",
+  "description": "LED Subscriber node configuration",
+  "namespace": "led",
+  "fields": [
+    {
+      "name": "topic",
+      "description": "Name of the topic to subscribe to",
+      "type": "CHAR",
+      "size": 16
+    }
+  ]
+}
