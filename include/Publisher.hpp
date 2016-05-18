@@ -1,3 +1,9 @@
+/* COPYRIGHT (c) 2016 Nova Labs SRL
+ *
+ * All rights reserved. All use of this software and documentation is
+ * subject to the License Agreement located in the file LICENSE.
+ */
+
 #pragma once
 
 #include <Core/MW/CoreNode.hpp>
@@ -9,31 +15,31 @@
 #include <array>
 
 namespace led {
-	class Publisher:
-		public Core::MW::CoreNode
-	{
+   class Publisher:
+      public Core::MW::CoreNode
+   {
 public:
-		Publisher(
-				const char*                    name,
-				Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
-		);
-		virtual
-		~Publisher();
+      Publisher(
+         const char*                    name,
+         Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
+      );
+      virtual
+      ~Publisher();
 
 public:
-		PublisherConfiguration configuration;
+      PublisherConfiguration configuration;
 
 private:
-		Core::MW::Publisher<common_msgs::Led> _publisher;
+      Core::MW::Publisher<common_msgs::Led> _publisher;
 
 private:
-		uint32_t _toggle;
+      uint32_t _toggle;
 
 private:
-		bool
-		onPrepareMW();
+      bool
+      onPrepareMW();
 
-		bool
-		onLoop();
-	};
+      bool
+      onLoop();
+   };
 }

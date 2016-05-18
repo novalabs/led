@@ -1,3 +1,9 @@
+/* COPYRIGHT (c) 2016 Nova Labs SRL
+ *
+ * All rights reserved. All use of this software and documentation is
+ * subject to the License Agreement located in the file LICENSE.
+ */
+
 #pragma once
 
 #include <Core/MW/CoreNode.hpp>
@@ -8,42 +14,42 @@
 #include <led/SubscriberConfiguration.hpp>
 
 namespace led {
-	class Subscriber:
-		public Core::MW::CoreNode
-	{
+   class Subscriber:
+      public Core::MW::CoreNode
+   {
 public:
-		Subscriber(
-				const char*                    name,
-				Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
-		);
-		virtual
-		~Subscriber();
+      Subscriber(
+         const char*                    name,
+         Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
+      );
+      virtual
+      ~Subscriber();
 
 public:
-		SubscriberConfiguration configuration;
+      SubscriberConfiguration configuration;
 
 private:
-		bool
-		onPrepareMW();
+      bool
+      onPrepareMW();
 
-		bool
-		onLoop();
-
-
-private:
-		static bool
-		ledCallback_(
-				const common_msgs::Led& msg,
-				Core::MW::Node*         node
-		);
-
-		bool
-		ledCallback(
-				const common_msgs::Led& msg
-		);
+      bool
+      onLoop();
 
 
 private:
-		Core::MW::Subscriber<common_msgs::Led, 5> _subscriber;
-	};
+      static bool
+      ledCallback_(
+         const common_msgs::Led& msg,
+         Core::MW::Node*         node
+      );
+
+      bool
+      ledCallback(
+         const common_msgs::Led& msg
+      );
+
+
+private:
+      Core::MW::Subscriber<common_msgs::Led, 5> _subscriber;
+   };
 }
