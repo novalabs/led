@@ -6,40 +6,47 @@
 
 #pragma once
 
-#include <Core/MW/CoreNode.hpp>
-#include <Core/MW/Publisher.hpp>
+#include <core/mw/CoreNode.hpp>
+#include <core/mw/Publisher.hpp>
 
-#include <common_msgs/Led.hpp>
-#include <led/PublisherConfiguration.hpp>
+#include <core/common_msgs/Led.hpp>
+#include <core/led/PublisherConfiguration.hpp>
 
-#include <array>
-
+namespace core {
 namespace led {
-   class Publisher:
-      public Core::MW::CoreNode
-   {
+class Publisher:
+   public core::mw::CoreNode,
+   public core::mw::CoreConfigurable<PublisherConfiguration>
+{
 public:
-      Publisher(
-         const char*                    name,
-         Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
-      );
-      virtual
-      ~Publisher();
+   Publisher(
+      const char*                name,
+      core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
+   );
+   virtual
+   ~Publisher();
 
-public:
-      PublisherConfiguration configuration;
-
-private:
-      Core::MW::Publisher<common_msgs::Led> _publisher;
+// Publishers and subscribers
 
 private:
-      uint32_t _toggle;
+   core::mw::Publisher<common_msgs::Led> _publisher;
+
+// Node data and functions
 
 private:
-      bool
-      onPrepareMW();
+   uint32_t _toggle;
 
-      bool
-      onLoop();
-   };
+// CoreNode events to override
+
+private:
+   bool
+   onConfigure();
+
+   bool
+   onPrepareMW();
+
+   bool
+   onLoop();
+};
+}
 }

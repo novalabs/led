@@ -6,50 +6,57 @@
 
 #pragma once
 
-#include <Core/MW/CoreNode.hpp>
-#include <Core/MW/Subscriber.hpp>
-#include <Core/HW/GPIO.hpp>
+#include <core/mw/CoreNode.hpp>
+#include <core/mw/Subscriber.hpp>
 
-#include <common_msgs/Led.hpp>
-#include <led/SubscriberConfiguration.hpp>
+#include <core/common_msgs/Led.hpp>
+#include <core/led/SubscriberConfiguration.hpp>
 
+namespace core {
 namespace led {
-   class Subscriber:
-      public Core::MW::CoreNode
-   {
+class Subscriber:
+   public core::mw::CoreNode,
+   public core::mw::CoreConfigurable<SubscriberConfiguration>
+{
 public:
-      Subscriber(
-         const char*                    name,
-         Core::MW::Thread::PriorityEnum priority = Core::MW::Thread::PriorityEnum::NORMAL
-      );
-      virtual
-      ~Subscriber();
+   Subscriber(
+      const char*                name,
+      core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
+   );
+   virtual
+   ~Subscriber();
 
-public:
-      SubscriberConfiguration configuration;
-
-private:
-      bool
-      onPrepareMW();
-
-      bool
-      onLoop();
-
+// Publishers and subscribers
 
 private:
-      static bool
-      ledCallback_(
-         const common_msgs::Led& msg,
-         Core::MW::Node*         node
-      );
+   core::mw::Subscriber<common_msgs::Led, 5> _subscriber;
 
-      bool
-      ledCallback(
-         const common_msgs::Led& msg
-      );
-
+// Node data and functions
 
 private:
-      Core::MW::Subscriber<common_msgs::Led, 5> _subscriber;
-   };
+   static bool
+   ledCallback_(
+      const common_msgs::Led& msg,
+      core::mw::Node*         node
+   );
+
+   bool
+   ledCallback(
+      const common_msgs::Led& msg
+   );
+
+
+// CoreNode events to override
+
+private:
+   bool
+   onConfigure();
+
+   bool
+   onPrepareMW();
+
+   bool
+   onLoop();
+};
+}
 }

@@ -1,7 +1,7 @@
 {
   "name": "PublisherConfiguration",
   "description": "LED Publisher node configuration",
-  "namespace": "led",
+  "namespace": "@",
   "fields": [
     {
       "name": "topic",

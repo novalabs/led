@@ -1,5 +1,5 @@
 {
   "name": "led",
-  "namespace": "@",
-  "description": "LED Nodes"
+  "description": "LED Nodes",
+  "provider": "core"
 }

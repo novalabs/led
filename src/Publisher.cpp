@@ -4,52 +4,61 @@
  * subject to the License Agreement located in the file LICENSE.
  */
 
-#include <led/Publisher.hpp>
+#include <core/led/Publisher.hpp>
 
-#include <Core/MW/Middleware.hpp>
-#include <Core/MW/common.hpp>
+#include <core/mw/Middleware.hpp>
+#include <core/common.hpp>
 
+namespace core {
 namespace led {
-   Publisher::Publisher(
-      const char*                    name,
-      Core::MW::Thread::PriorityEnum priority
-   ) :
-      CoreNode::CoreNode(name, priority),
-      _toggle(0)
-   {
-      _workingAreaSize = 512;
-   }
+Publisher::Publisher(
+   const char*                name,
+   core::os::Thread::Priority priority
+) :
+   CoreNode::CoreNode(name, priority),
+   CoreConfigurable(name),
+   _toggle(0)
+{
+   _workingAreaSize = 512;
+}
 
-   Publisher::~Publisher()
-   {
-      teardown();
-   }
+Publisher::~Publisher()
+{
+   teardown();
+}
 
-   bool
-   Publisher::onPrepareMW()
-   {
-      this->advertise(_publisher, configuration.topic);
+bool
+Publisher::onConfigure()
+{
+   return isConfigured();    // Make sure we have a valid configuration...
+}
 
-      return true;
-   }
+bool
+Publisher::onPrepareMW()
+{
+   this->advertise(_publisher, configuration().topic);
 
-   inline bool
-   Publisher::onLoop()
-   {
-      common_msgs::Led* msgp;
+   return true;
+}
 
-      if (_publisher.alloc(msgp)) {
-         msgp->led   = configuration.led;
-         msgp->value = _toggle;
-         _toggle    ^= 1;
+inline bool
+Publisher::onLoop()
+{
+   common_msgs::Led* msgp;
 
-         if (!_publisher.publish(*msgp)) {
-            return false;
-         }
+   if (_publisher.alloc(msgp)) {
+      msgp->led   = configuration().led;
+      msgp->value = _toggle;
+      _toggle    ^= 1;
+
+      if (!_publisher.publish(*msgp)) {
+         return false;
       }
+   }
 
-      Core::MW::Thread::sleep(Core::MW::Time::ms(500));
+   core::os::Thread::sleep(core::os::Time::ms(500));
 
-      return true;
-   } // Publisher::onLoop
+   return true;
+}    // Publisher::onLoop
+}
 }

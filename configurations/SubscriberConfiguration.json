@@ -1,7 +1,7 @@
 {
   "name": "SubscriberConfiguration",
   "description": "LED Subscriber node configuration",
-  "namespace": "led",
+  "namespace": "@",
   "fields": [
     {
       "name": "topic",

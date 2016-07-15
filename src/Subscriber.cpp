@@ -4,65 +4,74 @@
  * subject to the License Agreement located in the file LICENSE.
  */
 
-#include <led/Subscriber.hpp>
+#include <core/led/Subscriber.hpp>
 #include <Module.hpp>
 
-#include <Core/MW/Middleware.hpp>
-#include <Core/MW/common.hpp>
-#include <Core/HW/GPIO.hpp>
+#include <core/mw/Middleware.hpp>
+#include <core/common.hpp>
+#include <core/hw/GPIO.hpp>
 
+namespace core {
 namespace led {
-   Subscriber::Subscriber(
-      const char*                    name,
-      Core::MW::Thread::PriorityEnum priority
-   ) :
-      CoreNode::CoreNode(name, priority)
-   {
-      _workingAreaSize = 512;
+Subscriber::Subscriber(
+   const char*                name,
+   core::os::Thread::Priority priority
+) :
+   CoreNode::CoreNode(name, priority),
+   CoreConfigurable<SubscriberConfiguration>::CoreConfigurable(name)
+{
+   _workingAreaSize = 512;
+}
+
+Subscriber::~Subscriber()
+{
+   teardown();
+}
+
+bool
+Subscriber::onConfigure()
+{
+   return isConfigured();    // Make sure we have a valid configuration...
+}
+
+bool
+Subscriber::onPrepareMW()
+{
+   _subscriber.set_callback(Subscriber::ledCallback_);
+   this->subscribe(_subscriber, configuration().topic);
+
+   return true;
+}
+
+inline bool
+Subscriber::onLoop()
+{
+   if (!this->spin(ModuleConfiguration::SUBSCRIBER_SPIN_TIME)) {
+      Module::led.toggle();
    }
 
-   Subscriber::~Subscriber()
-   {
-      teardown();
-   }
+   return true;
+}
 
-   bool
-   Subscriber::onPrepareMW()
-   {
-      _subscriber.set_callback(Subscriber::ledCallback_);
-      this->subscribe(_subscriber, configuration.topic);
+bool
+Subscriber::ledCallback_(
+   const core::common_msgs::Led& msg,
+   core::mw::Node*               node
+)
+{
+   Subscriber* tmp = static_cast<Subscriber*>(node);
 
-      return true;
-   }
+   return tmp->ledCallback(msg);
+}
 
-   inline bool
-   Subscriber::onLoop()
-   {
-      if (!this->spin(Configuration::SUBSCRIBER_SPIN_TIME)) {
-         Module::led.toggle();
-      }
+bool
+Subscriber::ledCallback(
+   const core::common_msgs::Led& msg
+)
+{
+   Module::led.write(msg.value);
 
-      return true;
-   }
-
-   bool
-   Subscriber::ledCallback_(
-      const common_msgs::Led& msg,
-      Core::MW::Node*         node
-   )
-   {
-      Subscriber* tmp = static_cast<Subscriber*>(node);
-
-      return tmp->ledCallback(msg);
-   }
-
-   bool
-   Subscriber::ledCallback(
-      const common_msgs::Led& msg
-   )
-   {
-      Module::led.write(msg.value);
-
-      return true;
-   }
+   return true;
+}
+}
 }
