@@ -56,10 +56,10 @@ Subscriber::onLoop()
 bool
 Subscriber::ledCallback_(
    const core::common_msgs::Led& msg,
-   core::mw::Node*               node
+   void*                         context
 )
 {
-   Subscriber* tmp = static_cast<Subscriber*>(node);
+   Subscriber* tmp = static_cast<Subscriber*>(context);
 
    return tmp->ledCallback(msg);
 }

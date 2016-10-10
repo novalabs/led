@@ -37,7 +37,7 @@ private:
    static bool
    ledCallback_(
       const common_msgs::Led& msg,
-      core::mw::Node*         node
+      void*                   context
    );
 
    bool
