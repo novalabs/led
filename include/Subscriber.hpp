@@ -15,48 +15,48 @@
 namespace core {
 namespace led {
 class Subscriber:
-   public core::mw::CoreNode,
-   public core::mw::CoreConfigurable<SubscriberConfiguration>
+    public core::mw::CoreNode,
+    public core::mw::CoreConfigurable<SubscriberConfiguration>
 {
 public:
-   Subscriber(
-      const char*                name,
-      core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
-   );
-   virtual
-   ~Subscriber();
+    Subscriber(
+        const char*                name,
+        core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
+    );
+    virtual
+    ~Subscriber();
 
 // Publishers and subscribers
 
 private:
-   core::mw::Subscriber<common_msgs::Led, 5> _subscriber;
+    core::mw::Subscriber<common_msgs::Led, 5> _subscriber;
 
 // Node data and functions
 
 private:
-   static bool
-   ledCallback_(
-      const common_msgs::Led& msg,
-      void*                   context
-   );
+    static bool
+    ledCallback_(
+        const common_msgs::Led& msg,
+        void*                   context
+    );
 
-   bool
-   ledCallback(
-      const common_msgs::Led& msg
-   );
+    bool
+    ledCallback(
+        const common_msgs::Led& msg
+    );
 
 
 // CoreNode events to override
 
 private:
-   bool
-   onConfigure();
+    bool
+    onConfigure();
 
-   bool
-   onPrepareMW();
+    bool
+    onPrepareMW();
 
-   bool
-   onLoop();
+    bool
+    onLoop();
 };
 }
 }

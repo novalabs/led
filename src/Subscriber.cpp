@@ -14,64 +14,64 @@
 namespace core {
 namespace led {
 Subscriber::Subscriber(
-   const char*                name,
-   core::os::Thread::Priority priority
+    const char*                name,
+    core::os::Thread::Priority priority
 ) :
-   CoreNode::CoreNode(name, priority),
-   CoreConfigurable<SubscriberConfiguration>::CoreConfigurable(name)
+    CoreNode::CoreNode(name, priority),
+    CoreConfigurable<SubscriberConfiguration>::CoreConfigurable(name)
 {
-   _workingAreaSize = 512;
+    _workingAreaSize = 512;
 }
 
 Subscriber::~Subscriber()
 {
-   teardown();
+    teardown();
 }
 
 bool
 Subscriber::onConfigure()
 {
-   return isConfigured();    // Make sure we have a valid configuration...
+    return isConfigured();   // Make sure we have a valid configuration...
 }
 
 bool
 Subscriber::onPrepareMW()
 {
-   _subscriber.set_callback(Subscriber::ledCallback_);
-   this->subscribe(_subscriber, configuration().topic);
+    _subscriber.set_callback(Subscriber::ledCallback_);
+    this->subscribe(_subscriber, configuration().topic);
 
-   return true;
+    return true;
 }
 
 inline bool
 Subscriber::onLoop()
 {
-   if (!this->spin(ModuleConfiguration::SUBSCRIBER_SPIN_TIME)) {
-      Module::led.toggle();
-   }
+    if (!this->spin(ModuleConfiguration::SUBSCRIBER_SPIN_TIME)) {
+        Module::led.toggle();
+    }
 
-   return true;
+    return true;
 }
 
 bool
 Subscriber::ledCallback_(
-   const core::common_msgs::Led& msg,
-   void*                         context
+    const core::common_msgs::Led& msg,
+    void*                         context
 )
 {
-   Subscriber* tmp = static_cast<Subscriber*>(context);
+    Subscriber* tmp = static_cast<Subscriber*>(context);
 
-   return tmp->ledCallback(msg);
+    return tmp->ledCallback(msg);
 }
 
 bool
 Subscriber::ledCallback(
-   const core::common_msgs::Led& msg
+    const core::common_msgs::Led& msg
 )
 {
-   Module::led.write(msg.value);
+    Module::led.write(msg.value);
 
-   return true;
+    return true;
 }
 }
 }

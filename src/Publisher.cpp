@@ -12,53 +12,53 @@
 namespace core {
 namespace led {
 Publisher::Publisher(
-   const char*                name,
-   core::os::Thread::Priority priority
+    const char*                name,
+    core::os::Thread::Priority priority
 ) :
-   CoreNode::CoreNode(name, priority),
-   CoreConfigurable(name),
-   _toggle(0)
+    CoreNode::CoreNode(name, priority),
+    CoreConfigurable(name),
+    _toggle(0)
 {
-   _workingAreaSize = 512;
+    _workingAreaSize = 512;
 }
 
 Publisher::~Publisher()
 {
-   teardown();
+    teardown();
 }
 
 bool
 Publisher::onConfigure()
 {
-   return isConfigured();    // Make sure we have a valid configuration...
+    return isConfigured();   // Make sure we have a valid configuration...
 }
 
 bool
 Publisher::onPrepareMW()
 {
-   this->advertise(_publisher, configuration().topic);
+    this->advertise(_publisher, configuration().topic);
 
-   return true;
+    return true;
 }
 
 inline bool
 Publisher::onLoop()
 {
-   common_msgs::Led* msgp;
+    common_msgs::Led* msgp;
 
-   if (_publisher.alloc(msgp)) {
-      msgp->led   = configuration().led;
-      msgp->value = _toggle;
-      _toggle    ^= 1;
+    if (_publisher.alloc(msgp)) {
+        msgp->led   = configuration().led;
+        msgp->value = _toggle;
+        _toggle    ^= 1;
 
-      if (!_publisher.publish(*msgp)) {
-         return false;
-      }
-   }
+        if (!_publisher.publish(*msgp)) {
+            return false;
+        }
+    }
 
-   core::os::Thread::sleep(core::os::Time::ms(500));
+    core::os::Thread::sleep(core::os::Time::ms(500));
 
-   return true;
+    return true;
 }    // Publisher::onLoop
 }
 }

@@ -15,38 +15,38 @@
 namespace core {
 namespace led {
 class Publisher:
-   public core::mw::CoreNode,
-   public core::mw::CoreConfigurable<PublisherConfiguration>
+    public core::mw::CoreNode,
+    public core::mw::CoreConfigurable<PublisherConfiguration>
 {
 public:
-   Publisher(
-      const char*                name,
-      core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
-   );
-   virtual
-   ~Publisher();
+    Publisher(
+        const char*                name,
+        core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL
+    );
+    virtual
+    ~Publisher();
 
 // Publishers and subscribers
 
 private:
-   core::mw::Publisher<common_msgs::Led> _publisher;
+    core::mw::Publisher<common_msgs::Led> _publisher;
 
 // Node data and functions
 
 private:
-   uint32_t _toggle;
+    uint32_t _toggle;
 
 // CoreNode events to override
 
 private:
-   bool
-   onConfigure();
+    bool
+    onConfigure();
 
-   bool
-   onPrepareMW();
+    bool
+    onPrepareMW();
 
-   bool
-   onLoop();
+    bool
+    onLoop();
 };
 }
 }
