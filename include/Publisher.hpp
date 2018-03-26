@@ -26,7 +26,19 @@ public:
     virtual
     ~Publisher();
 
-// Publishers and subscribers
+    inline void toggle(
+        bool toggle)
+    {
+        _toggle = toggle;
+    }
+
+    inline void value(
+        uint32_t value)
+    {
+        _value = value;
+    }
+
+    // Publishers and subscribers
 
 private:
     core::mw::Publisher<common_msgs::Led> _publisher;
@@ -34,7 +46,8 @@ private:
 // Node data and functions
 
 private:
-    uint32_t _toggle;
+    uint32_t _value;
+    bool _toggle;
 
 // CoreNode events to override
 

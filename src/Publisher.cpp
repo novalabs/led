@@ -17,7 +17,8 @@ Publisher::Publisher(
 ) :
     CoreNode::CoreNode(name, priority),
     CoreConfigurable(name),
-    _toggle(0)
+    _value(0),
+    _toggle(true)
 {
     _workingAreaSize = 512;
 }
@@ -48,8 +49,11 @@ Publisher::onLoop()
 
     if (_publisher.alloc(msgp)) {
         msgp->led   = configuration().led;
-        msgp->value = _toggle;
-        _toggle    ^= 1;
+        msgp->value = _value;
+
+        if(_toggle) {
+            _value ^= 1;
+        }
 
         if (!_publisher.publish(*msgp)) {
             return false;
